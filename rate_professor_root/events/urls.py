@@ -6,5 +6,5 @@ urlpatterns = [
     path('list', views.list, name='list'),
     path('view', views.view, name='view'),
     path('<str:professor_id>/<str:module_code>/average', views.average, name='average'),
-    path('rate', views.rate, name='rate'),
+    path('<str:professor_id>/<str:module_code>/<int:year>/<int:semester>/<int:rating>/rate', views.rate, name='rate'),
   ]

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="741bbcf0-aea8-4aeb-a8a4-820f4b45dec4" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/rate_professor_root/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/events/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/rate_professor_root/events/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/events/templates/events/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/events/templates/events/fault.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/events/templates/events/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/events/templates/events/module_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/events/templates/events/professor_module_rating.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/events/templates/events/professor_rating.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/events/templates/events/rate_professor.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/events/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/rate_professor_root/events/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/events/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/rate_professor_root/events/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/rate_professor_site/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/rate_professor_root/rate_professor_site/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/rate_professor_site/templates/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rate_professor_root/rate_professor_site/templates/login.html" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="25bSzQFUN1hNdTPA5UESRRoZLgw" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\joasi\Documents\rate_professor\rate_professor_root\events\templates\events" />
+      <recent name="C:\Users\joasi\Documents\rate_professor\rate_professor_root\rate_professor_site\templates" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="741bbcf0-aea8-4aeb-a8a4-820f4b45dec4" name="Default Changelist" comment="" />
+      <created>1645794555697</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1645794555697</updated>
+      <workItem from="1645794556833" duration="6829000" />
+      <workItem from="1645884482033" duration="15304000" />
+      <workItem from="1646218935318" duration="14161000" />
+      <workItem from="1646313625484" duration="23000" />
+      <workItem from="1646385790783" duration="1002000" />
+      <workItem from="1646830947401" duration="12206000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+</project>

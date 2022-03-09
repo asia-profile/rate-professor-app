@@ -56,7 +56,7 @@ ROOT_URLCONF = 'rate_professor_site.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'events/templates/events'], #'rate_professor_site/templates', 'events/templates/events'
+        'DIRS': [], #[BASE_DIR / 'events/templates/events'], #'rate_professor_site/templates', 'events/templates/events'
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,11 +1,26 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+import json
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.db.models import Sum
 from django.contrib import auth
 from .models import Student, Professor, Module, Rating
 # Create your views here.
 #this is server side
 #def register(request):
+
+def register(request):
+    if request.method == 'POST':
+        uname = request.POST.get('uname')
+        pwd = request.POST.get('pwd')
+        # print(uname, pwd)
+        if Student.objects.filter(username=uname).count() > 0:
+            return HttpResponse('Username already exists.')
+        else:
+            user = Student(username=uname, password=pwd)
+            user.save()
+            return HttpResponse("/login")
+    else:
+        return HttpResponse("/fault")
 
 
 def login(request):
@@ -21,6 +36,7 @@ def login(request):
         #show error page
         return HttpResponseRedirect("/fault")
 
+
 def logout(request):
     auth.logout(request)
     #redirect to success page
@@ -28,22 +44,51 @@ def logout(request):
 
 
 def index(request):
-    #return HttpResponse("<h1>MyClub Event Calendar</h1>")
-    return render(request, 'index.html')
+    return HttpResponse("<h1>Welcome to rating site</h1>")
+    #return render(request, 'index.html')
+
 
 def fault(request):
-    #return HttpResponse("<h1>MyClub Event Calendar</h1>")
-    return render(request, 'fault.html')
+    return HttpResponse("<p>Faulty login/registration; try again</p>")
+    #return render(request, 'fault.html')
 
 
 #View a list of all module instances and the professor(s) teaching each of them
-def list(request):
-    modules = Module.objects.all()
-    return render(request, 'events/module_list.html', {"modules": modules})
+def list(request): #seems to work, even if not elegant
+    #in case of bad request
+    http_bad_response = HttpResponseBadRequest()
+    http_bad_response['Content Type']  ='text/plain'
+    if request.method!='GET':
+        http_bad_response.content = 'Only GET requests allowed for this resource\n'
+
+    #if reached here, then the request is good; get list of all modules from database
+    modules = Module.objects.all().values('module_code', 'name', 'year', 'semester', 'professors')
+    #collect objects and put them in new list items with appropriate json names
+    list = []
+    for record in modules:
+        item = {'module_code': record['module_code'], 'module_name': record['name'], 'year': record['year'],
+                'semester': record['semester'], 'module_professors': record['professors']}
+        list.append(item)
+    #make final json response payload
+    payload = {'module list': list}
+    #create and return normal response
+    http_response = HttpResponse(json.dumps(payload))
+    http_response['Content Type'] = 'application/json'
+    http_response.status_code = 200
+    http_response.reason_phrase = 'OK'
+    return http_response
+
+    #modules = Module.objects.all()
+    #return render(request, 'events/module_list.html', {"modules": modules})
 
 
 #View the rating of all professors
-def view(request):
+def view(request): #seems to work, even if not elegant
+    http_bad_response = HttpResponseBadRequest()
+    http_bad_response['Content Type'] = 'text/plain'
+    if request.method != 'GET':
+        http_bad_response.content = 'Only GET requests allowed for this resource\n'
+
     # here make calculations for all the professors, getting their ratings from each module and computing average
     #do that by calling the ratings object
     professors = Professor.objects.all()
@@ -58,18 +103,36 @@ def view(request):
             average = average + (ratings_sum/p.ratings_count)
             p.rating = average
 
-    return render(request, 'events/professor_rating.html', {"professors": professors})
+    #okay so now that we did the calculation for all the professors about their average - now only similar as in list ig
+    # if reached here, then the request is good; get list of all professors from database
+    professors = Professor.objects.all().values('firstname', 'lastname', 'professor_id', 'rating')
+    # collect objects and put them in new list items with appropriate json names
+    list = []
+    for record in professors:
+        item = {'firstname': record['firstname'], 'lastname': record['lastname'],
+                'professor_id': record['professor_id'], 'rating': record['rating']}
+        list.append(item)
+        # make final json response payload
+    payload = {'professor ranking list': list}
+    # create and return normal response
+    http_response = HttpResponse(json.dumps(payload))
+    http_response['Content Type'] = 'application/json'
+    http_response.status_code = 200
+    http_response.reason_phrase = 'OK'
+    return http_response
+
+    #return render(request, 'events/professor_rating.html', {"professors": professors})
 
 
 #View the average rating of a certain professor in a certain module
-def average(request, professor_id, module_code): #need to make changes in path in urls.py to have that
+def average(request, professor_id, module_code):
 
     module = Module.objects.filter(module_code=module_code)
     #ratings = Rating.objects.filter(module_code=module_code, professor_id=professor_id)
     ratings = Rating.objects.filter(professor_id=professor_id)
     good_ratings = {}
     for x in ratings:
-        if x.module_code == module_code:
+        if x.module == module_code:
             good_ratings |= x
 
     professor = Professor.objects.filter(professor_id=professor_id)
@@ -84,8 +147,34 @@ def average(request, professor_id, module_code): #need to make changes in path i
         ratings_sum = ratings_sum + r.rating
 
     average_rating = ratings_sum/rating_count
-    return render(request, 'events/professor_module_rating.html',
-                  {"professor": professor, "average_rating": average_rating, "module": module})
+    professor.rating = average_rating
+    #professor.save()
+    # okay so now that we did the calculation for all the professors about their average - now only similar as in list ig
+    # if reached here, then the request is good; get list of all professors from database
+    # collect objects and put them in new list items with appropriate json names
+    # make final json response payload
+    #p = Professor.objects.all().values('firstname', 'lastname', 'professor_id', 'rating')
+    list_p = []
+    p = Professor.objects.filter(professor_id=professor_id).values('firstname', 'lastname', 'professor_id',
+                                                                   'module', 'rating')
+    for record in p:
+        item = {'firstname': record['firstname'], 'lastname': record['lastname'],
+                'professor_id': record['professor_id'], 'module_code': ['module_code'], 'rating': record['rating']}
+        list_p.append(item)
+    #for record in p:
+    #    if record.professor_id == professor_id:
+    #        item = {'firstname': record['firstname'], 'lastname': record['lastname'],
+    #                'professor_id': record['professor_id'], 'module_code': ['module_code'], 'rating': record['rating']}
+    #        list_p.append(item)
+
+    #create and return normal response
+    payload = {'professor in module': list_p}
+    http_response = HttpResponse(json.dumps(payload))
+    http_response['Content Type'] = 'application/json'
+    http_response.status_code = 200
+    http_response.reason_phrase = 'OK'
+    return http_response
+    #return render(request, 'events/professor_module_rating.html', {"professor": professor, "average_rating": average_rating, "module": module})
 
 
 #Rate the teaching of a certain professor in a certain module instance.
@@ -93,16 +182,29 @@ def average(request, professor_id, module_code): #need to make changes in path i
 #should be here? I think it should, since it goes from server side with calculations...
 #tho from that side it could be that in rate.py, and from client side it would be in myclient.py stuff
 def rate(request, professor_id, module_code, year, semester, rating): #same as above view function...hmmm do we need a form here? Or is it just client from command line
+    http_bad_response = HttpResponseBadRequest()
+    http_bad_response['Content Type'] = 'text/plain'
+    if request.method != 'POST' or request.method != 'GET':
+        http_bad_response.content = 'Only POST/GET requests allowed for this resource\n'
 
-    professor = Professor.object.filter(professor_id=professor_id)
-    module = Module.objects.filter(professor_id=professor_id, module_code=module_code, year=year, semester=semester)
+
+    professor = Professor.objects.get(professor_id=professor_id)
+    module = Module.objects.get(module_code=module_code, year=year, semester=semester)
     #Rating.objects.create(professor_id=request.data["professor_id"],
     #                      module_code=request.data["module_code"],
     #                      rating=request.data["rating"])
-    Rating.objects.create(professor_id=request.data["professor_id"],
-                          module_code=module_code,
-                          rating=rating)
+    rating = Rating.objects.create(module=module, professor_id=professor_id, rating=rating) #...will this work?...
 
     professor.ratings_count = professor.ratings_count + 1
-    return render(request, 'events/rate_professor.html')
-#do we need a form it? maybe for client application part??? will get back to his for sure, since we ne
+
+    #new_r = Rating.objects.all().values('module', 'professor_id', rating=rating)
+    #list_r = []
+
+    #payload = {'New rating created': list_r}
+    #http_response = HttpResponse(json.dumps(payload))
+    http_response = HttpResponse()
+    #http_response['Content Type'] = 'application/json'
+    http_response.status_code = 200
+    http_response.reason_phrase = 'OK'
+    return http_response
+    #return render(request, 'events/rate_professor.html')
