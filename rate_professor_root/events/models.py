@@ -23,18 +23,18 @@ class Professor(models.Model):
     # idk if I need this, or if I can just calculate this stuff and display it then
     #modules = models.ManyToManyField(Module, blank=True) # professor can be in multiple modules
     rating = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(5)])
-    ratings_count = models.IntegerField(default=0) #amount of times professor was rated
+    #ratings_count = models.IntegerField(default=0) #amount of times professor was rated
     # rating = models.RatingField(range=5)  # 5 possible rating values, 1-5
 
     def __str__(self):
         return self.firstname + " " + self.lastname
 
-    #def average_rating(self):
-    #    if self.ratings_count!=0:
-    #        average = self.rating/self.ratings_count
-    #    else:
-    #        average = 0
-    #    return average
+    def average_rating(self):
+        if self.ratings_count!=0:
+            average = self.rating/self.ratings_count
+        else:
+            average = 0
+        return average
 
 
     #def average_module_rating(self):
@@ -60,7 +60,7 @@ class Module(models.Model):
         return p[:-1]
 
     def __str__(self):
-        return self.code + " " + self.name
+        return self.module_code + " " + self.name
 
 
 
@@ -70,7 +70,7 @@ class Module(models.Model):
 
 class Rating (models.Model):
     #student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
-    module = models.ForeignKey(Module,  on_delete=models.CASCADE)
+    module = models.ForeignKey(Module,  on_delete=models.CASCADE) #multiple ratings for a module
     professor_id = models.CharField('Identifier of Professor', max_length=30, null=True)
     #professor_id = models.ForeignKey(Professor,  on_delete=models.CASCADE)
     # professor_id = models.ForeignKey(Professor, on_delete=models.CASCADE)
@@ -79,5 +79,5 @@ class Rating (models.Model):
     rating = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(5)])
 
 
-    def __str__(self):
-        return self.rating_num
+    #def __str__(self):
+    #    return self.rating_num
