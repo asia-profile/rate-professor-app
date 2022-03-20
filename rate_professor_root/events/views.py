@@ -6,7 +6,14 @@ from django.contrib import auth
 from .models import Student, Professor, Module, Rating
 # Create your views here.
 #this is server side
-#def register(request):
+
+
+def proper_round(num, dec=0):
+    num = str(num)[:str(num).index('.')+dec+2]
+    if num[-1]>='5':
+        return float(num[:-2-(not dec)]+str(int(num[-2-(not dec)])+1))
+    return float(num[:-1])
+
 
 def register(request):
     if request.method == 'POST':
@@ -73,7 +80,6 @@ def list(request): #seems to work, even if not elegant
     #collect objects and put them in new list items with appropriate json names
     list = []
     #have a queryset sth in
-
     for record in modules:
         #professors = record.professors.all().values('firstname', 'lastname', 'professor_id')
 
@@ -84,6 +90,7 @@ def list(request): #seems to work, even if not elegant
         #shows only id of professor or how many of professors are there or sth and we want to show a list of them
         list.append(item)
         list.append(item2)
+
         #okay now that works for display, even thou it' snot very elegant
 
     #list.append(modules.values_list('professors'))
@@ -101,7 +108,8 @@ def list(request): #seems to work, even if not elegant
 
 
 #View the rating of all professors
-def view(request): #seems to work, even if not elegant
+def view(request): #bad numbers: JE gets 3 instead of 4, VS gets 2 instaed of 3; only TT gets as it should be 1
+    #note: if I chanfe rating_sum at the beginning for 1 instad of 3 then we get good values for VS and TT
     http_bad_response = HttpResponseBadRequest()
     http_bad_response['Content Type'] = 'text/plain'
     if request.method != 'GET':
@@ -109,21 +117,25 @@ def view(request): #seems to work, even if not elegant
 
     # here make calculations for all the professors, getting their ratings from each module and computing average
     #do that by calling the ratings object
-    professors = Professor.objects.all()
-    ratings_count = 0
-    for p in professors:
+
+    professors_ids = Professor.objects.all().values('professor_id')
+    for p in professors_ids:
+        ratings_count=0
         ratings_sum = 0
         average = 0
-        ratings = Rating.objects.filter(professor_id=p.professor_id)
-        #now add those ratings
+        ratings = Rating.objects.filter(professor_id=p['professor_id'])
+        #ratings = Rating.objects.filter(professor_id=p['professor_id']).values('rating')
         for r in ratings:
             ratings_sum = ratings_sum + r.rating
+            #ratings_sum = ratings_sum + r['rating']
             ratings_count = ratings_count + 1
-        if ratings_count != 0:
-            average = average + (ratings_sum/ratings_count)
-            p.rating = average
-            p.save()
-            #okay seem to work, since the rating for professor changed upon pulling up the url
+        average = (average + ratings_sum) / ratings_count
+        average = proper_round(average, 0)
+        #round(average) #okay, all is well, just doesn't round properly, gives 3 for 3,6666 and 2 for 2.5
+        this_professor = Professor.objects.get(professor_id=p['professor_id'])
+        this_professor.rating = average
+        this_professor.save()
+
 
     #okay so now that we did the calculation for all the professors about their average - now only similar as in list ig
     # if reached here, then the request is good; get list of all professors from database
@@ -139,7 +151,7 @@ def view(request): #seems to work, even if not elegant
     # create and return normal response
     http_response = HttpResponse(json.dumps(payload))
     http_response['Content Type'] = 'application/json'
-    http_response.status_code = 201
+    http_response.status_code = 200
     http_response.reason_phrase = 'OK'
     return http_response
 
@@ -152,12 +164,27 @@ def average(request, professor_id, module_code):
     #module = Module.objects.filter(module_code=module_code)
     #ratings = Rating.objects.filter(module_code=module_code, professor_id=professor_id)
     ratings = Rating.objects.filter(professor_id=professor_id)
-    good_ratings = {}
-    how_many_ratings = 0
-    for x in ratings:
-        if x.module == module_code:
-            good_ratings |= x
-            how_many_ratings = how_many_ratings + 1
+    ratings_count = 0
+    ratings_sum = 0
+    average = 0
+    for r in ratings:
+        ratings_sum = ratings_sum + r.rating
+        # ratings_sum = ratings_sum + r['rating']
+        ratings_count = ratings_count + 1
+
+    average = (average + ratings_sum) / ratings_count
+    average = proper_round(average, 0)
+
+    this_professor = Professor.objects.get(professor_id=professor_id)
+    this_professor.rating = average
+    this_professor.save()
+
+    #good_ratings = {}
+    #how_many_ratings = 0
+    #for x in ratings:
+    #    if x.module == module_code:
+    #        good_ratings |= x
+    #        how_many_ratings = how_many_ratings + 1
 
     #professor = Professor.objects.filter(professor_id=professor_id)
     #rating_count = 1
@@ -166,35 +193,36 @@ def average(request, professor_id, module_code):
     #    if p.professor_id==professor_id and p.ratings_count!=0:
     #        rating_count = p.ratings_count
 
-    professor = Professor.objects.get(professor_id=professor_id)
-    ratings_sum = 0
+    #professor = Professor.objects.get(professor_id=professor_id)
+    #ratings_sum = 0
     #ratings_count = 0
-    for r in good_ratings:
-        ratings_sum = ratings_sum + r.rating
+    #for r in good_ratings:
+    #    ratings_sum = ratings_sum + r.rating
         #ratings_count = ratings_count + 1
 
-    if how_many_ratings!=0:
-        average_rating = ratings_sum/how_many_ratings
-    else:
-        average_rating = 1
+    #if how_many_ratings!=0:
+    #    average_rating = ratings_sum/how_many_ratings
+    #    average_rating=proper_round(average_rating,0) #round to nearest integer
+    #else:
+    #    average_rating = 1
 
-    professor.rating = average_rating
-    professor.save()
+    #professor.rating = average_rating
+    #professor.save()
     # okay so now that we did the calculation for all the professors about their average - now only similar as in list ig
     # if reached here, then the request is good; get list of all professors from database
     # collect objects and put them in new list items with appropriate json names
     # make final json response payload
 
     list_p = []
-    p = Professor.objects.filter(professor_id=professor_id).values('firstname', 'lastname', 'professor_id',
-                                                                   'module', 'rating')
+    p = Professor.objects.filter(professor_id=professor_id).values('firstname', 'lastname', 'professor_id', 'rating')
     for record in p:
-        item = {'firstname': record['firstname'], 'lastname': record['lastname'],
-                'professor_id': record['professor_id'], 'rating': record['rating']}
         item2 = {'module_code': module_code}
+        item = {'firstname': record['firstname'], 'lastname': record['lastname'],
+                'professor_id': record['professor_id'], 'has rating': record['rating']}
 
-        list_p.append(item)
         list_p.append(item2)
+        list_p.append(item)
+
 
     #create and return normal response
     payload = {'professor in module': list_p}
