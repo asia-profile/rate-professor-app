@@ -67,7 +67,7 @@
       <workItem from="1647591908601" duration="9113000" />
       <workItem from="1647681271427" duration="13755000" />
       <workItem from="1647782219268" duration="10444000" />
-      <workItem from="1647873752422" duration="13181000" />
+      <workItem from="1647873752422" duration="15605000" />
     </task>
     <task id="LOCAL-00001" summary="API views fixed I think - but check especially rate">
       <created>1646845328450</created>
@@ -97,7 +97,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647883403629</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="API and client for 4 commands done. Try once more register login logout">
+      <created>1647891163010</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1647891163010</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

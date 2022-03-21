@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import json
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.contrib.auth import authenticate, login
 from django.db.models import Sum
 from django.contrib import auth
 from .models import Student, Professor, Module, Rating
@@ -21,10 +22,7 @@ def proper_round(num, dec=0):
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('username') #get('uname')
-        #email = request.POST.get('email')
         password = request.POST.get('password') #get('pwd')
-        # print(uname, pwd)
-        #if Student.objects.filter(username=username, email=email).count() > 0: #filter(username=uname)
         if Student.objects.filter(username=username).count() > 0:  # filter(username=uname)
             return HttpResponse('Username and/or email already exists.')
         else:
@@ -35,26 +33,30 @@ def register(request):
         return HttpResponse("/fault")
 
 
-def login(request, url):
+def login(request):
     if request.method == 'POST':
-        username = request.POST.get('username', '')
-        email = request.POST.get('email', '')
-        password = request.POST.get('password', '')
+        username = request.POST('username')  # get('uname')
+        password = request.POST('password')  # get('pwd')
+        #username = request.POST.get('username', '')
+        #password = request.POST.get('password', '')
         user = auth.authenticate(username=username, password=password) #email=email, password=password)
-        if user is not None and user.is_active():
-        #correct password and user is marked active
-            auth.login(request, user)
-        #redirect to a success page
-            return HttpResponseRedirect("/index")
+        if user is not None:
+            if user.is_active():
+                #correct password and user is marked active
+                auth.login(request, user)
+                #redirect to a success page
+                return HttpResponseRedirect("index")
+            else:
+                return HttpResponseRedirect()
         else:
         #show error page
-            return HttpResponse("Faulty login/registration; try again")
+            return HttpResponseRedirect()
 
 
 def logout(request):
     auth.logout(request)
     #redirect to success page
-    return HttpResponseRedirect("Logged out")
+    return render("Logged out")
 
 
 def index(request):

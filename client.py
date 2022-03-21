@@ -5,13 +5,13 @@ import requests
 import json
 
 
-def register():
-    response = requests.get('http://127.0.0.1:8000/register')
+def register(url):
+    response = requests.get(url + 'register')
     print(json.dumps(response.json(), indent=1))
 
 
 def login(url):
-    response = requests.get('http://127.0.0.1:8000/login')
+    response = requests.get(url + '/login')
     print(json.dumps(response.json(), indent=1))
 
 
@@ -21,7 +21,7 @@ def logut():
 
 
 def list():
-    #json = requests.get('http://127.0.0.1:8000/list').json()
+
     url = "http://127.0.0.1:8000/list"
 
     response = requests.get(url)
@@ -29,15 +29,12 @@ def list():
 
 
 def view():
-    #json = requests.get('http://127.0.0.1:8000/view').json()
+
     url = "http://127.0.0.1:8000/view"
 
     response = requests.get(url)
     print(json.dumps(response.json(), indent=4))
 
-
-
-#think need to change a bit here, since we're to get that all from command line, so maybe story the *args somewhere
 
 def average(professor_id, module_code):
     url = "http://127.0.0.1:8000/" + professor_id + "/" + module_code + "/average"
@@ -49,8 +46,6 @@ def average(professor_id, module_code):
 
 def rate(professor_id, module_code, year, semester, rating):
     url = 'http://127.0.0.1:8000/' + professor_id + "/" + module_code + "/" + year + "/" + semester + "/" + rating + "/rate"
-    #json = requests.get(url).json()
-    #print(json['rate'])
     response = requests.get(url)
     print(json.dumps(response.json(), indent=1))
 
