@@ -4,7 +4,6 @@
     <list default="true" id="741bbcf0-aea8-4aeb-a8a4-820f4b45dec4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/myclient.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/rate_professor_root/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/rate_professor_root/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rate_professor_root/events/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/rate_professor_root/events/views.py" afterDir="false" />
     </list>
@@ -68,7 +67,7 @@
       <workItem from="1647591908601" duration="9113000" />
       <workItem from="1647681271427" duration="13755000" />
       <workItem from="1647782219268" duration="10444000" />
-      <workItem from="1647873752422" duration="9405000" />
+      <workItem from="1647873752422" duration="13181000" />
     </task>
     <task id="LOCAL-00001" summary="API views fixed I think - but check especially rate">
       <created>1646845328450</created>
@@ -91,7 +90,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647800275194</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="API and client for 4 commands done. Try once more register login logout">
+      <created>1647883403629</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1647883403629</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -112,6 +118,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="API views fixed I think - but check especially rate" />
     <MESSAGE value="APIs done, just client left...(and perhaps login/logout/register)" />
-    <option name="LAST_COMMIT_MESSAGE" value="APIs done, just client left...(and perhaps login/logout/register)" />
+    <MESSAGE value="API and client for 4 commands done. Try once more register login logout" />
+    <option name="LAST_COMMIT_MESSAGE" value="API and client for 4 commands done. Try once more register login logout" />
   </component>
 </project>

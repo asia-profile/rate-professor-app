@@ -5,6 +5,8 @@ from django.db.models import Sum
 from django.contrib import auth
 from .models import Student, Professor, Module, Rating
 from django.core import serializers
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import CreateView
 # Create your views here.
 #this is server side
 
@@ -19,48 +21,45 @@ def proper_round(num, dec=0):
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('username') #get('uname')
-        email = request.POST.get('email')
+        #email = request.POST.get('email')
         password = request.POST.get('password') #get('pwd')
         # print(uname, pwd)
-        if Student.objects.filter(username=username, email=email).count() > 0: #filter(username=uname)
+        #if Student.objects.filter(username=username, email=email).count() > 0: #filter(username=uname)
+        if Student.objects.filter(username=username).count() > 0:  # filter(username=uname)
             return HttpResponse('Username and/or email already exists.')
         else:
-            user = Student(username=username, password=password, email=email) #user = Student(username=uname, password=pwd)
+            user = Student(username=username, password=password) #, email=email) #user = Student(username=uname, password=pwd)
             user.save()
             return HttpResponse("/login")
     else:
         return HttpResponse("/fault")
 
 
-def login(request):
-    username = request.POST.get('username', '')
-    email = request.POST.get('email', '')
-    password = request.POST.get('password', '')
-    user = auth.authenticate(username=username, email=email, password=password)
-    if user is not None and user.is_active():
+def login(request, url):
+    if request.method == 'POST':
+        username = request.POST.get('username', '')
+        email = request.POST.get('email', '')
+        password = request.POST.get('password', '')
+        user = auth.authenticate(username=username, password=password) #email=email, password=password)
+        if user is not None and user.is_active():
         #correct password and user is marked active
-        auth.login(request, user)
+            auth.login(request, user)
         #redirect to a success page
-        return HttpResponseRedirect("/index")
-    else:
+            return HttpResponseRedirect("/index")
+        else:
         #show error page
-        return HttpResponseRedirect("/fault")
+            return HttpResponse("Faulty login/registration; try again")
 
 
 def logout(request):
     auth.logout(request)
     #redirect to success page
-    return HttpResponseRedirect("/login")
+    return HttpResponseRedirect("Logged out")
 
 
 def index(request):
-    return HttpResponse("<h1>Welcome to rating site</h1>")
+    return HttpResponse("<h1>Welcome to the site</h1>")
     #return render(request, 'index.html')
-
-
-def fault(request):
-    return HttpResponse("<p>Faulty login/registration; try again</p>")
-    #return render(request, 'fault.html')
 
 
 #View a list of all module instances and the professor(s) teaching each of them
@@ -201,12 +200,6 @@ def average(request, professor_id, module_code):
 
 #Rate the teaching of a certain professor in a certain module instance.
 def rate(request, professor_id, module_code, year, semester, rating): #same as above view function...hmmm do we need a form here? Or is it just client from command line
-
-
-    http_bad_response = HttpResponseBadRequest()
-    http_bad_response['Content Type'] = 'text/plain'
-    if request.method != 'POST' or request.method != 'GET':
-        http_bad_response.content = 'Only POST/GET requests allowed for this resource\n'
 
 
     #professor = Professor.objects.get(professor_id=professor_id)

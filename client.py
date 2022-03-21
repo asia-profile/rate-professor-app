@@ -6,13 +6,13 @@ import json
 
 
 def register():
-    json = requests.get('http://127.0.0.1:8000/register').json()
-    print(json['register'])
+    response = requests.get('http://127.0.0.1:8000/register')
+    print(json.dumps(response.json(), indent=1))
 
 
 def login(url):
-    json = requests.get(url).json()
-    print(json['login'])
+    response = requests.get('http://127.0.0.1:8000/login')
+    print(json.dumps(response.json(), indent=1))
 
 
 def logut():
@@ -61,11 +61,11 @@ def main():
     #name of command i.e. list, view, will be second one, and average and rate will be the last ones
     if command_line_argument[1] == "list":
         list()
-    if command_line_argument[1] == "view":
+    elif command_line_argument[1] == "view":
         view()
-    if command_line_argument[1] == "average":
+    elif command_line_argument[1] == "average":
         average(command_line_argument[2], command_line_argument[3])
-    if command_line_argument[1] == "rate":
+    elif command_line_argument[1] == "rate":
         rate(command_line_argument[2], command_line_argument[3], command_line_argument[4], command_line_argument[5],
                 command_line_argument[6])
     else:
